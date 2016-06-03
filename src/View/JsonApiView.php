@@ -157,9 +157,6 @@ class JsonApiView extends View
             $meta = $this->viewVars['_meta'];
         }
 
-//        if (isset($this->viewVars['_serialize'])) {
-//            $serialize = $this->viewVars['_serialize'];
-//        }
         if (isset($this->viewVars['_serialize']) && $this->viewVars['_serialize'] !== false) {
             $serialize = $this->_dataToSerialize($this->viewVars['_serialize']);
         }
