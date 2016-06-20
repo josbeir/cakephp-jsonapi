@@ -72,10 +72,11 @@ class JsonApiView extends View
 
         $schemas = [];
         $entities = Hash::normalize($entities);
-        foreach ($entities as $entityName => $options) {
-            $entityclass = App::className($entityName, 'Model\Entity');
+        foreach ($entities as $aliasedEntityName => $entityName) {
+            $entityName = $entityName ? : $aliasedEntityName;
+            $entityClass = App::className($entityName, 'Model\Entity');
 
-            if (!$entityclass) {
+            if (!$entityClass) {
                 throw new MissingEntityException([$entityName]);
             }
 
@@ -85,11 +86,11 @@ class JsonApiView extends View
                 $schemaClass = App::className('JsonApi.Entity', 'View\Schema', 'Schema');
             }
 
-            $schema = function ($factory, $container) use ($schemaClass, $entityName) {
-                return new $schemaClass($factory, $container, $this, $entityName);
+            $schema = function ($factory, $container) use ($schemaClass, $aliasedEntityName) {
+                return new $schemaClass($factory, $container, $this, $aliasedEntityName);
             };
 
-            $schemas[$entityclass] = $schema;
+            $schemas[$entityClass] = $schema;
         }
 
         return $schemas;

@@ -86,6 +86,82 @@ class JsonApiViewTest extends TestCase
         );
     }
 
+    /**
+     * Test Render
+     * @return [type] [description]
+     */
+    public function testRenderUsingAliasedEntitySchema()
+    {
+        $records = TableRegistry::get('Authors')->find()
+            ->contain(['Articles'])
+            ->where(['Authors.id' => 1])
+            ->all();
+
+
+        $view = $this->_getView([
+            'author' => $records,
+            '_serialize' => true,
+            '_url' => 'http://localhost',
+            '_entities' => [
+                'Publisher' => 'Author',
+                'PublishedArticle' => 'Article'
+            ],
+            '_include' => ['articles']
+        ]);
+
+        $expected = '{
+    "data": [
+        {
+            "type": "publishers",
+            "id": "1",
+            "attributes": {
+                "name": "mariano"
+            },
+            "relationships": {
+                "articles": {
+                    "data": [
+                        {
+                            "type": "publishedarticles",
+                            "id": "1"
+                        },
+                        {
+                            "type": "publishedarticles",
+                            "id": "3"
+                        }
+                    ]
+                }
+            },
+            "links": {
+                "self": "http:\/\/localhost\/publishers\/1"
+            }
+        }
+    ],
+    "included": [
+        {
+            "type": "publishedarticles",
+            "id": "1",
+            "attributes": {
+                "author_id": 1,
+                "title": "First Article",
+                "body": "First Article Body",
+                "published": "Y"
+            }
+        },
+        {
+            "type": "publishedarticles",
+            "id": "3",
+            "attributes": {
+                "author_id": 1,
+                "title": "Third Article",
+                "body": "Third Article Body",
+                "published": "Y"
+            }
+        }
+    ]
+}';
+        $this->assertJsonStringEqualsJsonString($expected, $view->render());
+    }
+
     public function testViewResponse()
     {
         $records = TableRegistry::get('Articles')->find()->all();
