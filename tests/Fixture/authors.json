@@ -4,9 +4,7 @@
             "type": "authors",
             "id": "1",
             "attributes": {
-                "title": null,
-                "body": null,
-                "published": null
+                "name": "mariano"
             },
             "relationships": {
                 "articles": {
@@ -30,9 +28,7 @@
             "type": "authors",
             "id": "2",
             "attributes": {
-                "title": null,
-                "body": null,
-                "published": null
+                "name": "nate"
             },
             "relationships": {
                 "articles": {
@@ -47,9 +43,7 @@
             "type": "authors",
             "id": "3",
             "attributes": {
-                "title": null,
-                "body": null,
-                "published": null
+                "name": "larry"
             },
             "relationships": {
                 "articles": {
@@ -69,9 +63,7 @@
             "type": "authors",
             "id": "4",
             "attributes": {
-                "title": null,
-                "body": null,
-                "published": null
+                "name": "garrett"
             },
             "relationships": {
                 "articles": {
