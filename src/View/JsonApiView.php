@@ -131,6 +131,10 @@ class JsonApiView extends View
         $parameters = $serialize = $url = null;
         $jsonOptions = $this->_jsonOptions();
 
+        if (isset($this->viewVars['_serialize']) && $this->viewVars['_serialize'] !== false) {
+            $serialize = $this->_dataToSerialize($this->viewVars['_serialize']);
+        }
+
         if (isset($this->viewVars['_url'])) {
             $url = rtrim($this->viewVars['_url'], '/');
         }
@@ -149,16 +153,12 @@ class JsonApiView extends View
             $fieldsets = $this->viewVars['_fieldsets'];
         }
 
-        if (isset($this->viewVars['_links'])) {
-            $links = $this->viewVars['_links'];
-        }
-
         if (isset($this->viewVars['_meta'])) {
             $meta = $this->viewVars['_meta'];
         }
 
-        if (isset($this->viewVars['_serialize']) && $this->viewVars['_serialize'] !== false) {
-            $serialize = $this->_dataToSerialize($this->viewVars['_serialize']);
+        if (isset($this->viewVars['_links'])) {
+            $links = $this->viewVars['_links'];
         }
 
         $encoderOptions = new EncoderOptions($jsonOptions, $url);
