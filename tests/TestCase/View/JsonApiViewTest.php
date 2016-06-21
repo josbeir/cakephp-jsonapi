@@ -104,7 +104,7 @@ class JsonApiViewTest extends TestCase
             '_url' => 'http://localhost',
             '_entities' => [
                 'Publisher' => 'Author',
-                'PublishedArticle' => 'Article'
+                'Article'
             ],
             '_include' => ['articles']
         ]);
@@ -112,7 +112,7 @@ class JsonApiViewTest extends TestCase
         $expected = '{
     "data": [
         {
-            "type": "publishers",
+            "type": "authors",
             "id": "1",
             "attributes": {
                 "name": "mariano"
@@ -121,11 +121,11 @@ class JsonApiViewTest extends TestCase
                 "articles": {
                     "data": [
                         {
-                            "type": "publishedarticles",
+                            "type": "articles",
                             "id": "1"
                         },
                         {
-                            "type": "publishedarticles",
+                            "type": "articles",
                             "id": "3"
                         }
                     ]
@@ -138,7 +138,7 @@ class JsonApiViewTest extends TestCase
     ],
     "included": [
         {
-            "type": "publishedarticles",
+            "type": "articles",
             "id": "1",
             "attributes": {
                 "author_id": 1,
@@ -148,7 +148,7 @@ class JsonApiViewTest extends TestCase
             }
         },
         {
-            "type": "publishedarticles",
+            "type": "articles",
             "id": "3",
             "attributes": {
                 "author_id": 1,
