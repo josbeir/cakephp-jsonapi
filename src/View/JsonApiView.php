@@ -72,14 +72,19 @@ class JsonApiView extends View
 
         $schemas = [];
         $entities = Hash::normalize($entities);
-        foreach ($entities as $entityName => $options) {
-            $entityclass = App::className($entityName, 'Model\Entity');
+        foreach ($entities as $aliasedEntityName => $entityName) {
+            $entityName = $entityName ? : $aliasedEntityName;
+            $entityClass = App::className($entityName, 'Model\Entity');
 
-            if (!$entityclass) {
+            if (!$entityClass) {
                 throw new MissingEntityException([$entityName]);
             }
 
-            $schemaClass = App::className($entityName, 'View\Schema', 'Schema');
+            $schemaClass = App::className($aliasedEntityName, 'View\Schema', 'Schema');
+
+            if (!$schemaClass) {
+                $schemaClass = App::className($entityName, 'View\Schema', 'Schema');
+            }
 
             if (!$schemaClass) {
                 $schemaClass = App::className('JsonApi.Entity', 'View\Schema', 'Schema');
@@ -89,7 +94,7 @@ class JsonApiView extends View
                 return new $schemaClass($factory, $container, $this, $entityName);
             };
 
-            $schemas[$entityclass] = $schema;
+            $schemas[$entityClass] = $schema;
         }
 
         return $schemas;
@@ -131,6 +136,10 @@ class JsonApiView extends View
         $parameters = $serialize = $url = null;
         $jsonOptions = $this->_jsonOptions();
 
+        if (isset($this->viewVars['_serialize']) && $this->viewVars['_serialize'] !== false) {
+            $serialize = $this->_dataToSerialize($this->viewVars['_serialize']);
+        }
+
         if (isset($this->viewVars['_url'])) {
             $url = rtrim($this->viewVars['_url'], '/');
         }
@@ -149,19 +158,12 @@ class JsonApiView extends View
             $fieldsets = $this->viewVars['_fieldsets'];
         }
 
-        if (isset($this->viewVars['_links'])) {
-            $links = $this->viewVars['_links'];
-        }
-
         if (isset($this->viewVars['_meta'])) {
             $meta = $this->viewVars['_meta'];
         }
 
-//        if (isset($this->viewVars['_serialize'])) {
-//            $serialize = $this->viewVars['_serialize'];
-//        }
-        if (isset($this->viewVars['_serialize']) && $this->viewVars['_serialize'] !== false) {
-            $serialize = $this->_dataToSerialize($this->viewVars['_serialize']);
+        if (isset($this->viewVars['_links'])) {
+            $links = $this->viewVars['_links'];
         }
 
         $encoderOptions = new EncoderOptions($jsonOptions, $url);

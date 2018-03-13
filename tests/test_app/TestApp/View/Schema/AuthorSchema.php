@@ -13,9 +13,7 @@ class AuthorSchema extends EntitySchema
     public function getAttributes($entity)
     {
         return [
-            'title' => $entity->title,
-            'body' => $entity->body,
-            'published' => $entity->published
+            'name' => $entity->name,
         ];
     }
 
